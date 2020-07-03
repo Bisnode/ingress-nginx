@@ -36,10 +36,6 @@ func (n NGINXController) Name() string {
 
 // Check returns if the nginx healthz endpoint is returning ok (status code 200)
 func (n *NGINXController) Check(_ *http.Request) error {
-	if n.isShuttingDown {
-		return fmt.Errorf("the ingress controller is shutting down")
-	}
-
 	// check the nginx master process is running
 	fs, err := proc.NewFS("/proc", false)
 	if err != nil {

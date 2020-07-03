@@ -211,6 +211,21 @@ Error loading new template: %v
 	return n
 }
 
+type isShuttingDownCheck struct {
+	isShuttingDown *bool
+}
+
+func (s isShuttingDownCheck) Check(_ *http.Request) error {
+	if *s.isShuttingDown {
+		return fmt.Errorf("the ingress controller is shutting down")
+	}
+	return nil
+}
+
+func (s isShuttingDownCheck) Name() string {
+	return "is-shutting-down"
+}
+
 // NGINXController describes a NGINX Ingress controller.
 type NGINXController struct {
 	podInfo *k8s.PodInfo
@@ -435,6 +450,13 @@ func (n NGINXController) DefaultEndpoint() ingress.Endpoint {
 		Address: "127.0.0.1",
 		Port:    fmt.Sprintf("%v", n.cfg.ListenPorts.Default),
 		Target:  &apiv1.ObjectReference{},
+	}
+}
+
+// NewShuttingDownCheck return a type that implements the checker interface for checking shutting down status
+func (n *NGINXController) NewShuttingDownCheck() isShuttingDownCheck {
+	return isShuttingDownCheck{
+		isShuttingDown: &n.isShuttingDown,
 	}
 }
 

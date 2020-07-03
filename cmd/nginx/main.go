@@ -160,6 +160,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	registerHealthz(nginx.HealthPath, ngx, mux)
+	registerLivez(ngx, mux)
 	registerMetrics(reg, mux)
 
 	go startHTTPServer(conf.ListenPorts.Health, mux)
@@ -292,6 +293,15 @@ func registerHealthz(healthPath string, ic *controller.NGINXController, mux *htt
 	// expose health check endpoint (/healthz)
 	healthz.InstallPathHandler(mux,
 		healthPath,
+		healthz.PingHealthz,
+		ic.NewShuttingDownCheck(),
+		ic,
+	)
+}
+
+func registerLivez(ic *controller.NGINXController, mux *http.ServeMux) {
+	// expose livez check endpoint (/livez)
+	healthz.InstallLivezHandler(mux,
 		healthz.PingHealthz,
 		ic,
 	)
