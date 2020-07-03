@@ -171,6 +171,8 @@ Takes the form "<host>:port". If not provided, no admission controller is starte
 		profilerPort = flags.Int("profiler-port", 10245, "Port to use for expose the ingress controller Go profiler when it is enabled.")
 
 		statusUpdateInterval = flags.Int("status-update-interval", status.UpdateInterval, "Time interval in seconds in which the status should check if an update is required. Default is 60 seconds")
+
+		shutdownGracePeriod = flags.Int("shutdown-grace-period", 0, "Time in seconds to wait after marked as shutting down before actual shutdown.")
 	)
 
 	flags.StringVar(&nginx.MaxmindLicenseKey, "maxmind-license-key", "", `Maxmind license key to download GeoLite2 Databases.
@@ -282,6 +284,7 @@ https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-g
 		PublishService:         *publishSvc,
 		PublishStatusAddress:   *publishStatusAddress,
 		UpdateStatusOnShutdown: *updateStatusOnShutdown,
+		ShutdownGracePeriod:    *shutdownGracePeriod,
 		UseNodeInternalIP:      *useNodeInternalIP,
 		SyncRateLimit:          *syncRateLimit,
 		ListenPorts: &ngx_config.ListenPorts{

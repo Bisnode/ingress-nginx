@@ -369,6 +369,7 @@ func (n *NGINXController) Start() {
 // Stop gracefully stops the NGINX master process.
 func (n *NGINXController) Stop() error {
 	n.isShuttingDown = true
+	time.Sleep(time.Duration(n.cfg.ShutdownGracePeriod) * time.Second)
 
 	n.stopLock.Lock()
 	defer n.stopLock.Unlock()
