@@ -172,7 +172,7 @@ Takes the form "<host>:port". If not provided, no admission controller is starte
 
 		statusUpdateInterval = flags.Int("status-update-interval", status.UpdateInterval, "Time interval in seconds in which the status should check if an update is required. Default is 60 seconds")
 
-		shutdownGracePeriod = flags.Int("shutdown-grace-period", 0, "Time in seconds to wait after marked as shutting down before actual shutdown.")
+		shutdownGracePeriod = flags.Int("shutdown-grace-period", 0, "Seconds to wait after receiving the shutdown signal, before stopping the nginx process.")
 	)
 
 	flags.StringVar(&nginx.MaxmindLicenseKey, "maxmind-license-key", "", `Maxmind license key to download GeoLite2 Databases.
